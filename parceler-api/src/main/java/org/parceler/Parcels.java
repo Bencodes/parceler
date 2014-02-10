@@ -133,6 +133,48 @@ public final class Parcels {
     }
 
     /**
+     * Wraps the input array containing `@Parcel` annotated classes with a `Parcelable` wrapper.
+     *
+     * @param input Array of Parcel
+     * @param <T>   Array with type of wrapped `Parcelable`
+     * @return Array of wrapped `Parcelable`
+     */
+    public static <T> Parcelable[] wrap(T[] input) {
+        if (input == null) {
+            return null;
+        }
+
+        Parcelable[] data = new Parcelable[input.length];
+        for (int x = 0; x < input.length; x++) {
+            Parcelable p = wrap(input[x]);
+            data[x] = p;
+        }
+
+        return data;
+    }
+
+    /**
+     * Unwraps the input array wrapped `@Parcel` `Parcelable`
+     *
+     * @param input Array of Parcelable
+     * @param <T>   Array with type of unwrapped `@Parcel`
+     * @return Array of unwrapped `@Parcel`
+     */
+    public static <T> T[] unwrap(Parcelable[] input) {
+        if (input == null) {
+            return null;
+        }
+
+        T[] data = (T[]) new Object[input.length];
+        for (int x = 0; x < input.length; x++) {
+            T t = unwrap(input[x]);
+            data[x] = t;
+        }
+
+        return data;
+    }
+
+    /**
      * Factory class for building a `Parcelable` from the given input.
      */
     public interface ParcelableFactory<T> {
