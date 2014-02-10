@@ -175,6 +175,48 @@ public final class Parcels {
     }
 
     /**
+     * Wraps the input sparse array containing `@Parcel` annotated classes with a `Parcelable` wrapper.
+     *
+     * @param input SparseArray of Parcel
+     * @param <T>   SparseArray with type of wrapped `Parcelable`
+     * @return SparseArray of wrapped `Parcelable`
+     */
+    public static <T> SparseArray<Parcelable> wrap(SparseArray<T> input) {
+        if (input == null) {
+            return null;
+        }
+
+        SparseArray<Parcelable> data = new SparseArray<Parcelable>();
+        for (int x = 0; x < input.size(); x++) {
+            Parcelable t = wrap(input.valueAt(x));
+            data.put(input.keyAt(x), t);
+        }
+
+        return data;
+    }
+
+    /**
+     * Unwraps the sparse array wrapped `@Parcel` `Parcelable`
+     *
+     * @param input SparseArray of Parcelable
+     * @param <T>   SparseArray with type of unwrapped `@Parcel`
+     * @return SparseArray of unwrapped `@Parcel`
+     */
+    public static <T> SparseArray<T> unwrap(SparseArray<Parcelable> input) {
+        if (input == null) {
+            return null;
+        }
+
+        SparseArray<T> data = new SparseArray<T>();
+        for (int x = 0; x < input.size(); x++) {
+            T t = unwrap(input.valueAt(x));
+            data.put(input.keyAt(x), t);
+        }
+
+        return data;
+    }
+
+    /**
      * Factory class for building a `Parcelable` from the given input.
      */
     public interface ParcelableFactory<T> {
