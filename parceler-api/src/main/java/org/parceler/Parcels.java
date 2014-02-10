@@ -16,9 +16,13 @@
 package org.parceler;
 
 import android.os.Parcelable;
+import android.util.SparseArray;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -48,6 +52,9 @@ public final class Parcels {
     protected static void update(ClassLoader classLoader){
         REPOSITORY.loadRepository(classLoader);
     }
+
+
+
 
     /**
      * Wraps the input `@Parcel` annotated class with a `Parcelable` wrapper.
@@ -81,6 +88,48 @@ public final class Parcels {
         }
         ParcelWrapper<T> wrapper = (ParcelWrapper<T>) input;
         return wrapper.getParcel();
+    }
+
+    /**
+     * Wraps the input list containing `@Parcel` annotated classes with a `Parcelable` wrapper.
+     *
+     * @param input List of Parcel
+     * @param <T>   List with type of wrapped `Parcelable`
+     * @return List of wrapped `Parcelable`
+     */
+    public static <T> List<Parcelable> wrap(List<T> input) {
+        if (input == null) {
+            return null;
+        }
+
+        ArrayList<Parcelable> data = new ArrayList<Parcelable>();
+        for (T t : input) {
+            Parcelable p = wrap(t);
+            data.add(p);
+        }
+
+        return data;
+    }
+
+    /**
+     * Unwraps the input list wrapped `@Parcel` `Parcelable`
+     *
+     * @param input List of Parcelable
+     * @param <T>   List with type of unwrapped `@Parcel`
+     * @return List of unwrapped `@Parcel`
+     */
+    public static <T> List<T> unwrap(List<Parcelable> input) {
+        if (input == null) {
+            return null;
+        }
+
+        ArrayList<T> data = new ArrayList<T>();
+        for (Parcelable p : input) {
+            T t = unwrap(p);
+            data.add(t);
+        }
+
+        return data;
     }
 
     /**
